@@ -1,5 +1,7 @@
 # OrgWare: Multi-Tenant SaaS Architecture
 
+🚀 **Live Demo:** [https://multi-tenant-organization-iota.vercel.app/](https://multi-tenant-organization-iota.vercel.app/)
+
 OrgWare is a robust, multi-tenant SaaS application built with Next.js, featuring isolated database schemas per organization, role-based access control (RBAC), and a dynamic cinematic landing page (ORYZO AI style). 
 
 The platform supports multiple departments (CRM, HR, Operations, Property, and Accounts) seamlessly integrated into a centralized dashboard, where data is completely isolated by tenant and restricted by user roles.
