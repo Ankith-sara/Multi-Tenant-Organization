@@ -6,7 +6,8 @@ import {
   createEmployee, 
   getEmployeeByEmail, 
   updateEmployeeRole,
-  deleteEmployee
+  deleteEmployee,
+  ensureDepartmentTables
 } from '@/lib/db';
 
 // Helper to authenticate session
@@ -27,6 +28,8 @@ export async function GET(request) {
     }
 
     const { organization_id } = auth.session;
+    // Self-heals department tables for organizations created before this feature shipped.
+    await ensureDepartmentTables(organization_id);
     const employees = await listEmployees(organization_id);
 
     return NextResponse.json({ employees }, { status: 200 });

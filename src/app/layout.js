@@ -17,6 +17,7 @@ export default function RootLayout({ children }) {
     <html
       lang="en"
       className={`${plusJakartaSans.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
       <head>
         <script
@@ -36,7 +37,7 @@ export default function RootLayout({ children }) {
           }}
         />
       </head>
-      <body className="min-h-full flex flex-col bg-studio-black">{children}</body>
+      <body className="min-h-full flex flex-col bg-studio-black" suppressHydrationWarning>{children}</body>
     </html>
   );
 }
