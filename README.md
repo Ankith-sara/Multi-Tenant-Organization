@@ -80,5 +80,3 @@ For older organizations, `ensureDepartmentTables(orgId)` is called defensively t
 ### API Routes & Server Components
 - **Department Pages** are Server Components. They check auth (`requireDepartmentAccess`) and fetch data server-side (no loading spinners).
 - **Interactive Mutations** (like leave-approval buttons or "add lead" forms) are decoupled into small Client Components that call the corresponding `/api/<dept>` routes.
-
---
