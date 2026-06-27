@@ -1,27 +1,34 @@
 # OrgWare: Multi-Tenant SaaS Architecture
 
-OrgWare is a robust, multi-tenant SaaS application built with Next.js, featuring isolated database schemas per organization and fine-grained role-based access control (RBAC).
+OrgWare is a robust, multi-tenant SaaS application built with Next.js, featuring isolated database schemas per organization, role-based access control (RBAC), and a dynamic cinematic landing page (ORYZO AI style). 
+
+The platform supports multiple departments (CRM, HR, Operations, Property, and Accounts) seamlessly integrated into a centralized dashboard, where data is completely isolated by tenant and restricted by user roles.
 
 ## Getting Started Locally
 
-1. **Install dependencies**:
-   ```bash
-   npm install
-   ```
+### 1. Prerequisites
+- **Node.js** (v18+)
+- **PostgreSQL** (Neon, Vercel Postgres, Supabase, or local instance)
 
-2. **Environment Variables**:
-   Create a `.env.local` file in the root directory and add your PostgreSQL connection string:
-   ```env
-   DATABASE_URL="postgresql://username:password@hostname:port/database?sslmode=require"
-   ```
+### 2. Install dependencies
+```bash
+npm install
+```
 
-3. **Run the Development Server**:
-   ```bash
-   npm run dev
-   ```
-   Open [http://localhost:3000](http://localhost:3000) in your browser.
+### 3. Environment Variables
+Create a `.env.local` file in the root directory and add your PostgreSQL connection string:
+```env
+DATABASE_URL="postgresql://username:password@hostname:port/database?sslmode=require"
+JWT_SECRET="your-secure-jwt-secret-key"
+```
 
-> **Note on Database Schemas**: The system will automatically create a master `organizations` table and isolated schemas (`org_{id}`) for each new organization you register!
+### 4. Run the Development Server
+```bash
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+> **Note on Database Schemas:** OrgWare handles schema creation automatically! When a new organization registers, a master `organizations` entry is created alongside a new isolated schema (`org_{id}`) containing all necessary tables (`employees`, `crm_leads`, `hr_leave_requests`, etc.). No manual SQL migration is required.
 
 ---
 
@@ -54,21 +61,24 @@ The following users are assigned to various departments. All of them use the sam
 
 ---
 
-## Deployment Guide
+## Architecture Overview
 
-Deploying OrgWare requires a Postgres database (such as Neon, Supabase, or Vercel Postgres) and a Node.js hosting provider (Vercel is recommended).
+### Single Source of Truth for Roles
+`src/lib/roles.js` is the only place that defines which roles can access which department, default landing pages, and role UI logic. Every guard (server pages, API routes, sidebar nav) reads from here so access rules never drift out of sync.
 
-### 1. Set up your Production Database
-1. Create a PostgreSQL database instance. We recommend **Neon** or **Vercel Postgres** for serverless scaling.
-2. Copy the provided connection string (URI). Ensure it includes `sslmode=require` if required by your provider.
+### Database Isolation
+Each tenant schema (`org_<id>`) provisions tables for:
+- `employees`
+- `crm_leads`
+- `hr_leave_requests`
+- `ops_tasks`
+- `properties`
+- `transactions`
 
-### 2. Deploy to Vercel
-1. Push your code to a GitHub, GitLab, or Bitbucket repository.
-2. Go to your [Vercel Dashboard](https://vercel.com/dashboard) and click **Add New > Project**.
-3. Import your repository.
-4. In the **Environment Variables** section, add:
-   * **Key:** `DATABASE_URL`
-   * **Value:** *(Paste your Postgres connection string here)*
-5. Click **Deploy**.
+For older organizations, `ensureDepartmentTables(orgId)` is called defensively to self-heal missing tables without manual migrations.
 
-Vercel will automatically build the Next.js app and deploy it. Since OrgWare automatically handles schema and table migrations during the signup flow (via `initMasterTable`), you do not need to manually run any SQL scripts! The master table will be created on the very first signup request.
+### API Routes & Server Components
+- **Department Pages** are Server Components. They check auth (`requireDepartmentAccess`) and fetch data server-side (no loading spinners).
+- **Interactive Mutations** (like leave-approval buttons or "add lead" forms) are decoupled into small Client Components that call the corresponding `/api/<dept>` routes.
+
+--
