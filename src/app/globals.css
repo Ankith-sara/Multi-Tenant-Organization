@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+:root {
+  --background: #100904;
+  --foreground: #ffedd7;
+  
+  --color-studio-black: #100904;
+  --color-warm-cream: #ffedd7;
+  --color-cork-shadow: #40372e;
+  --color-dark-cork: #382416;
+  --color-burnt-sienna: #dc5000;
+  --color-grey-brown: #6c5f51;
+  --color-forest-grid: #445231;
+}
+
+.light,
+html.light,
+:root.light {
+  --background: #ffffff;
+  --foreground: #100904;
+  
+  --color-studio-black: #ffffff;
+  --color-warm-cream: #100904;
+  --color-cork-shadow: #e6dfd5;
+  --color-dark-cork: #f3ece4;
+  --color-burnt-sienna: #dc5000;
+  --color-grey-brown: #8a7c6e;
+  --color-forest-grid: #768a5c;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-plus-jakarta);
+  
+  --color-studio-black: var(--color-studio-black);
+  --color-warm-cream: var(--color-warm-cream);
+  --color-cork-shadow: var(--color-cork-shadow);
+  --color-dark-cork: var(--color-dark-cork);
+  --color-burnt-sienna: var(--color-burnt-sienna);
+  --color-grey-brown: var(--color-grey-brown);
+  --color-forest-grid: var(--color-forest-grid);
+}
+
+body {
+  background-color: var(--color-studio-black);
+  color: var(--color-warm-cream);
+  font-family: var(--font-sans);
+  margin: 0;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
